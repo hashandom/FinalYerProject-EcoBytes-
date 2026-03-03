@@ -1,6 +1,7 @@
 package com.example.EcoBytes.service;
 
 import com.example.EcoBytes.entity.Product;
+import com.example.EcoBytes.exception.ResourceNotFoundException;
 import com.example.EcoBytes.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,19 +24,20 @@ public class ProductService {
 
     public Product getById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Product not found with id: " + id));
     }
 
-    public Product update(Long id, Product updatedProduct) {
+    public Product update(Long id, Product product) {
 
-        Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        Product existing = productRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Product not found with id: " + id));
 
-        existingProduct.setName(updatedProduct.getName());
-        existingProduct.setCategory(updatedProduct.getCategory());
-        existingProduct.setUnitPrice(updatedProduct.getUnitPrice());
+        existing.setName(product.getName());
+        existing.setUnitPrice(product.getUnitPrice());
 
-        return productRepository.save(existingProduct);
+        return productRepository.save(existing);
     }
 
     public void delete(Long id) {
