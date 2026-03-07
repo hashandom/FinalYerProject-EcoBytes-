@@ -22,4 +22,8 @@ public class Product {
     @NotNull
     @Column(nullable = false)
     private Double unitPrice;
+
+    @NotNull
+    @Column(nullable = false)
+    private Integer reorderLevel;
 }

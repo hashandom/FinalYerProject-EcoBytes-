@@ -5,6 +5,8 @@ import com.example.EcoBytes.entity.Batch;
 import com.example.EcoBytes.service.BatchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -101,4 +103,21 @@ public class BatchController {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
+
+    //LOW STOCK ALERT SYSTEM
+    @GetMapping("/low-stock")
+    public ResponseEntity<ApiResponse<List<Batch>>> getLowStockBatches() {
+
+        List<Batch> lowStockBatches = batchService.getLowStock();
+
+        ApiResponse<List<Batch>> response = new ApiResponse<>(
+                true,
+                "Low stock batches retrieved successfully",
+                lowStockBatches,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

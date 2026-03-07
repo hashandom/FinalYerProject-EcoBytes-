@@ -75,4 +75,12 @@ public class BatchService {
 
         return batches;
     }
+
+    //LOW STOCK ALERT SYSTEM
+    public List<Batch> getLowStock() {
+        return batchRepository.findAll()
+                .stream()
+                .filter(b -> b.getQuantity() < b.getProduct().getReorderLevel())
+                .toList();
+    }
 }
