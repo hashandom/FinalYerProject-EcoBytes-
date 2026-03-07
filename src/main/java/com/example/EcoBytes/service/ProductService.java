@@ -15,6 +15,10 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public Product save(Product product) {
+        long count = productRepository.count() + 1;
+        String id = String.format("PRD-%03d", count);
+
+        product.setProductId(id);
         return productRepository.save(product);
     }
 
@@ -22,13 +26,13 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getById(Long id) {
+    public Product getById(String id) {
         return productRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Product not found with id: " + id));
     }
 
-    public Product update(Long id, Product product) {
+    public Product update(String id, Product product) {
 
         Product existing = productRepository.findById(id)
                 .orElseThrow(() ->
@@ -40,8 +44,8 @@ public class ProductService {
         return productRepository.save(existing);
     }
 
-    public void delete(Long id) {
-        productRepository.deleteById(id);
+    public void delete(String id) {
+         productRepository.deleteById(id);
     }
 
 }

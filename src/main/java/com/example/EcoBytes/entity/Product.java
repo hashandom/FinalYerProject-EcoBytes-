@@ -1,19 +1,25 @@
 package com.example.EcoBytes.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
 @Data
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private String productId;
 
+   @NotBlank
+   @Column(nullable = false)
     private String name;
+
+    @NotBlank
+    @Column(nullable = false)
     private String category;
+
+    @NotNull
+    @Column(nullable = false)
     private Double unitPrice;
 }

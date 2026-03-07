@@ -3,6 +3,7 @@ package com.example.EcoBytes.controller;
 import com.example.EcoBytes.dto.ApiResponse;
 import com.example.EcoBytes.entity.Product;
 import com.example.EcoBytes.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Product>> create(@RequestBody Product product) {
+    public ResponseEntity<ApiResponse<Product>> create(@Valid @RequestBody Product product) {
 
         Product savedProduct = productService.save(product);
 
@@ -39,7 +40,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> getById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Product>> getById(@PathVariable String id) {
 
         Product product = productService.getById(id);
 
@@ -54,25 +55,36 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id,
-                                          @RequestBody Product product) {
+    public ResponseEntity<ApiResponse<Product>> update(
+            @PathVariable String id,
+            @Valid @RequestBody Product product) {
 
         Product updatedProduct = productService.update(id, product);
 
-        return updatedProduct != null ?
-                ResponseEntity.ok(updatedProduct) :
-                ResponseEntity.notFound().build();
+        ApiResponse<Product> response = ApiResponse.<Product>builder()
+                .success(true)
+                .message("Product updated successfully")
+                .data(updatedProduct)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Product>> delete(@PathVariable String id) {
 
+        // 1. Get product before deleting
+        Product existingProduct = productService.getById(id);
+
+        // 2. Delete it
         productService.delete(id);
 
-        ApiResponse<Void> response = ApiResponse.<Void>builder()
+        // 3. Return deleted product in response
+        ApiResponse<Product> response = ApiResponse.<Product>builder()
                 .success(true)
                 .message("Product deleted successfully")
-                .data(null)
+                .data(existingProduct)
                 .timestamp(LocalDateTime.now())
                 .build();
 
