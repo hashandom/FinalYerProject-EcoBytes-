@@ -3,6 +3,7 @@ package com.example.EcoBytes.controller;
 import com.example.EcoBytes.dto.ApiResponse;
 import com.example.EcoBytes.entity.Batch;
 import com.example.EcoBytes.service.BatchService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class BatchController {
 
     // CREATE
     @PostMapping
-    public ApiResponse<Batch> createBatch(@RequestBody Batch batch) {
+    public ApiResponse<Batch> createBatch(@Valid @RequestBody Batch batch) {
 
         Batch saved = batchService.createBatch(batch);
 
@@ -46,7 +47,7 @@ public class BatchController {
 
     // GET BY ID
     @GetMapping("/{id}")
-    public ApiResponse<Batch> getBatchById(@PathVariable Long id) {
+    public ApiResponse<Batch> getBatchById(@PathVariable String id) {
 
         Batch batch = batchService.getBatchById(id);
 
@@ -60,7 +61,7 @@ public class BatchController {
 
     // UPDATE
     @PutMapping("/{id}")
-    public ApiResponse<Batch> updateBatch(@PathVariable Long id,
+    public ApiResponse<Batch> updateBatch(@PathVariable String id,
                                           @RequestBody Batch batch) {
 
         Batch updated = batchService.updateBatch(id, batch);
@@ -75,7 +76,7 @@ public class BatchController {
 
     // DELETE
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteBatch(@PathVariable Long id) {
+    public ApiResponse<String> deleteBatch(@PathVariable String id) {
 
         batchService.deleteBatch(id);
 
@@ -89,7 +90,7 @@ public class BatchController {
 
     // FEFO
     @GetMapping("/fefo/{productId}")
-    public ApiResponse<List<Batch>> getFEFO(@PathVariable Long productId) {
+    public ApiResponse<List<Batch>> getFEFO(@PathVariable String productId) {
 
         List<Batch> batches = batchService.getFEFOBatches(productId);
 

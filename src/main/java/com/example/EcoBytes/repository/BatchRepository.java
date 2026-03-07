@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BatchRepository extends JpaRepository<Batch, Long> {
+public interface BatchRepository extends JpaRepository<Batch, String> {
 
-    List<Batch> findByProductProductIdOrderByExpiryDateAsc(Long productId);
+    List<Batch> findByProductProductIdOrderByExpiryDateAsc(String productId);
 }

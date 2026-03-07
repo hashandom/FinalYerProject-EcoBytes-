@@ -1,8 +1,10 @@
 package com.example.EcoBytes.service;
 
 import com.example.EcoBytes.entity.Batch;
+import com.example.EcoBytes.entity.Product;
 import com.example.EcoBytes.exception.ResourceNotFoundException;
 import com.example.EcoBytes.repository.BatchRepository;
+import com.example.EcoBytes.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,13 @@ import java.util.List;
 public class BatchService {
 
     private final BatchRepository batchRepository;
+    private final ProductRepository productRepository;
 
     // CREATE
     public Batch createBatch(Batch batch) {
+        long count = batchRepository.count() + 1;
+        String batchCode = String.format("BATCH-%03d", count);
+        batch.setBatchCode(batchCode);
         return batchRepository.save(batch);
     }
 
@@ -25,27 +31,32 @@ public class BatchService {
     }
 
     // GET BY ID
-    public Batch getBatchById(Long id) {
+    public Batch getBatchById(String id) {
         return batchRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Batch not found with id " + id));
     }
 
     // UPDATE
-    public Batch updateBatch(Long id, Batch batch) {
+    public Batch updateBatch(String id, Batch batch) {
 
         Batch existing = getBatchById(id);
 
         existing.setManufactureDate(batch.getManufactureDate());
         existing.setExpiryDate(batch.getExpiryDate());
         existing.setQuantity(batch.getQuantity());
-        existing.setProduct(batch.getProduct());
+
+        // fetch full product from DB
+        Product product = productRepository.findById(batch.getProduct().getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        existing.setProduct(product);
 
         return batchRepository.save(existing);
     }
 
     // DELETE
-    public void deleteBatch(Long id) {
+    public void deleteBatch(String id) {
 
         Batch batch = getBatchById(id);
 
@@ -53,7 +64,7 @@ public class BatchService {
     }
 
     // FEFO
-    public List<Batch> getFEFOBatches(Long productId) {
+    public List<Batch> getFEFOBatches(String productId) {
 
         List<Batch> batches =
                 batchRepository.findByProductProductIdOrderByExpiryDateAsc(productId);
