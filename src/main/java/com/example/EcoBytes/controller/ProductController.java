@@ -1,6 +1,8 @@
 package com.example.EcoBytes.controller;
 
 import com.example.EcoBytes.dto.ApiResponse;
+import com.example.EcoBytes.dto.ProductRequestDto;
+import com.example.EcoBytes.dto.ProductResponseDto;
 import com.example.EcoBytes.entity.Product;
 import com.example.EcoBytes.service.ProductService;
 import jakarta.validation.Valid;
@@ -20,31 +22,42 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Product>> create(@Valid @RequestBody Product product) {
+    public ResponseEntity<ApiResponse<ProductResponseDto>> create(
+            @Valid @RequestBody ProductRequestDto dto) {
 
-        Product savedProduct = productService.save(product);
+        ProductResponseDto savedProduct = productService.save(dto);
 
-        ApiResponse<Product> response = ApiResponse.<Product>builder()
+        ApiResponse<ProductResponseDto> response = ApiResponse.<ProductResponseDto>builder()
                 .success(true)
                 .message("Product created successfully")
                 .data(savedProduct)
                 .timestamp(LocalDateTime.now())
                 .build();
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
     @GetMapping
-    public List<Product> getAll() {
-        return productService.getAll();
+    public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getAll() {
+
+        List<ProductResponseDto> products = productService.getAll();
+
+        ApiResponse<List<ProductResponseDto>> response = ApiResponse.<List<ProductResponseDto>>builder()
+                .success(true)
+                .message("Product list retrieved")
+                .data(products)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> getById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<ProductResponseDto>> getById(@PathVariable String id) {
 
-        Product product = productService.getById(id);
+        ProductResponseDto product = productService.getById(id);
 
-        ApiResponse<Product> response = ApiResponse.<Product>builder()
+        ApiResponse<ProductResponseDto> response = ApiResponse.<ProductResponseDto>builder()
                 .success(true)
                 .message("Product fetched successfully")
                 .data(product)
@@ -55,13 +68,13 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> update(
+    public ResponseEntity<ApiResponse<ProductResponseDto>> update(
             @PathVariable String id,
-            @Valid @RequestBody Product product) {
+            @Valid @RequestBody ProductRequestDto dto) {
 
-        Product updatedProduct = productService.update(id, product);
+        ProductResponseDto updatedProduct = productService.update(id, dto);
 
-        ApiResponse<Product> response = ApiResponse.<Product>builder()
+        ApiResponse<ProductResponseDto> response = ApiResponse.<ProductResponseDto>builder()
                 .success(true)
                 .message("Product updated successfully")
                 .data(updatedProduct)
@@ -72,19 +85,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> delete(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<String>> delete(@PathVariable String id) {
 
-        // 1. Get product before deleting
-        Product existingProduct = productService.getById(id);
-
-        // 2. Delete it
         productService.delete(id);
 
-        // 3. Return deleted product in response
-        ApiResponse<Product> response = ApiResponse.<Product>builder()
+        ApiResponse<String> response = ApiResponse.<String>builder()
                 .success(true)
                 .message("Product deleted successfully")
-                .data(existingProduct)
+                .data("Deleted product id: " + id)
                 .timestamp(LocalDateTime.now())
                 .build();
 

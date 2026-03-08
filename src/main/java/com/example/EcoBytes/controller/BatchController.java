@@ -1,7 +1,8 @@
 package com.example.EcoBytes.controller;
 
 import com.example.EcoBytes.dto.ApiResponse;
-import com.example.EcoBytes.entity.Batch;
+import com.example.EcoBytes.dto.BatchRequestDto;
+import com.example.EcoBytes.dto.BatchResponseDto;
 import com.example.EcoBytes.service.BatchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,103 +22,116 @@ public class BatchController {
 
     // CREATE
     @PostMapping
-    public ApiResponse<Batch> createBatch(@Valid @RequestBody Batch batch) {
+    public ResponseEntity<ApiResponse<BatchResponseDto>> createBatch(
+            @Valid @RequestBody BatchRequestDto dto) {
 
-        Batch saved = batchService.createBatch(batch);
+        BatchResponseDto saved = batchService.createBatch(dto);
 
-        return ApiResponse.<Batch>builder()
+        ApiResponse<BatchResponseDto> response = ApiResponse.<BatchResponseDto>builder()
                 .success(true)
                 .message("Batch created successfully")
                 .data(saved)
                 .timestamp(LocalDateTime.now())
                 .build();
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // GET ALL
     @GetMapping
-    public ApiResponse<List<Batch>> getAllBatches() {
+    public ResponseEntity<ApiResponse<List<BatchResponseDto>>> getAllBatches() {
 
-        List<Batch> batches = batchService.getAllBatches();
+        List<BatchResponseDto> batches = batchService.getAllBatches();
 
-        return ApiResponse.<List<Batch>>builder()
+        ApiResponse<List<BatchResponseDto>> response = ApiResponse.<List<BatchResponseDto>>builder()
                 .success(true)
                 .message("Batch list retrieved")
                 .data(batches)
                 .timestamp(LocalDateTime.now())
                 .build();
+
+        return ResponseEntity.ok(response);
     }
 
     // GET BY ID
-    @GetMapping("/{id}")
-    public ApiResponse<Batch> getBatchById(@PathVariable String id) {
+    @GetMapping("/{batchCode}")
+    public ResponseEntity<ApiResponse<BatchResponseDto>> getBatchById(@PathVariable String batchCode) {
 
-        Batch batch = batchService.getBatchById(id);
+        BatchResponseDto batch = batchService.getBatchById(batchCode);
 
-        return ApiResponse.<Batch>builder()
+        ApiResponse<BatchResponseDto> response = ApiResponse.<BatchResponseDto>builder()
                 .success(true)
                 .message("Batch found")
                 .data(batch)
                 .timestamp(LocalDateTime.now())
                 .build();
+
+        return ResponseEntity.ok(response);
     }
 
     // UPDATE
-    @PutMapping("/{id}")
-    public ApiResponse<Batch> updateBatch(@PathVariable String id,
-                                          @RequestBody Batch batch) {
+    @PutMapping("/{batchCode}")
+    public ResponseEntity<ApiResponse<BatchResponseDto>> updateBatch(
+            @PathVariable String batchCode,
+            @Valid @RequestBody BatchRequestDto dto) {
 
-        Batch updated = batchService.updateBatch(id, batch);
+        BatchResponseDto updated = batchService.updateBatch(batchCode, dto);
 
-        return ApiResponse.<Batch>builder()
+        ApiResponse<BatchResponseDto> response = ApiResponse.<BatchResponseDto>builder()
                 .success(true)
                 .message("Batch updated successfully")
                 .data(updated)
                 .timestamp(LocalDateTime.now())
                 .build();
+
+        return ResponseEntity.ok(response);
     }
 
     // DELETE
-    @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteBatch(@PathVariable String id) {
+    @DeleteMapping("/{batchCode}")
+    public ResponseEntity<ApiResponse<String>> deleteBatch(@PathVariable String batchCode) {
 
-        batchService.deleteBatch(id);
+        batchService.deleteBatch(batchCode);
 
-        return ApiResponse.<String>builder()
+        ApiResponse<String> response = ApiResponse.<String>builder()
                 .success(true)
                 .message("Batch deleted successfully")
-                .data("Deleted ID : " + id)
+                .data("Deleted BatchCode : " + batchCode)
                 .timestamp(LocalDateTime.now())
                 .build();
+
+        return ResponseEntity.ok(response);
     }
 
-    // FEFO
+    // FEFO - First Expired First Out
     @GetMapping("/fefo/{productId}")
-    public ApiResponse<List<Batch>> getFEFO(@PathVariable String productId) {
+    public ResponseEntity<ApiResponse<List<BatchResponseDto>>> getFEFO(@PathVariable String productId) {
 
-        List<Batch> batches = batchService.getFEFOBatches(productId);
+        List<BatchResponseDto> batches = batchService.getFEFOBatches(productId);
 
-        return ApiResponse.<List<Batch>>builder()
+        ApiResponse<List<BatchResponseDto>> response = ApiResponse.<List<BatchResponseDto>>builder()
                 .success(true)
                 .message("FEFO batch list retrieved")
                 .data(batches)
                 .timestamp(LocalDateTime.now())
                 .build();
+
+        return ResponseEntity.ok(response);
     }
 
-    //LOW STOCK ALERT SYSTEM
+    // LOW STOCK ALERT SYSTEM
     @GetMapping("/low-stock")
-    public ResponseEntity<ApiResponse<List<Batch>>> getLowStockBatches() {
+    public ResponseEntity<ApiResponse<List<BatchResponseDto>>> getLowStockBatches() {
 
-        List<Batch> lowStockBatches = batchService.getLowStock();
+        List<BatchResponseDto> lowStockBatches = batchService.getLowStockBatches();
 
-        ApiResponse<List<Batch>> response = new ApiResponse<>(
-                true,
-                "Low stock batches retrieved successfully",
-                lowStockBatches,
-                LocalDateTime.now()
-        );
+        ApiResponse<List<BatchResponseDto>> response = ApiResponse.<List<BatchResponseDto>>builder()
+                .success(true)
+                .message("Low stock batches retrieved successfully")
+                .data(lowStockBatches)
+                .timestamp(LocalDateTime.now())
+                .build();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
-
 }
