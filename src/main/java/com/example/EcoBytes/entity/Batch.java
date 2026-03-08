@@ -1,5 +1,6 @@
 package com.example.EcoBytes.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -29,4 +30,11 @@ public class Batch {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    // MANY BATCHES → ONE SUPPLIER
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    @JsonBackReference
+    private Supplier supplier;
+
 }

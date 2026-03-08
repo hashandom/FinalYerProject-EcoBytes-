@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 public class Product {
@@ -26,4 +28,7 @@ public class Product {
     @NotNull
     @Column(nullable = false)
     private Integer reorderLevel;
+
+    @OneToMany(mappedBy = "product")
+    private List<Batch> batches;
 }
