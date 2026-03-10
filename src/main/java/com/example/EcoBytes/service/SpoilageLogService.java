@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +49,13 @@ public class SpoilageLogService {
 
         int num = Integer.parseInt(last.getSpoilageId().split("-")[1]);
         return String.format("SPOL-%03d", num + 1);
+    }
+
+    // GET ALL SPOILAGE LOGS
+    public List<SpoilageResponseDto> getAll(){
+        return spoilageRepository.findAll()
+                .stream()
+                .map(SpoilageMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

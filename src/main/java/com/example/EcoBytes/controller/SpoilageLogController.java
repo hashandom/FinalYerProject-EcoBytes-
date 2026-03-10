@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/spoilage")
 @RequiredArgsConstructor
@@ -17,5 +19,10 @@ public class SpoilageLogController {
     @PostMapping
     public SpoilageResponseDto create(@Valid @RequestBody SpoilageRequestDto dto){
         return spoilageService.createSpoilage(dto);
+    }
+
+    @GetMapping
+    public List<SpoilageResponseDto> getAll(){
+        return spoilageService.getAll();
     }
 }
