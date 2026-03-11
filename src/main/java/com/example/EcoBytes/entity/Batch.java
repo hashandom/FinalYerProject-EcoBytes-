@@ -37,4 +37,8 @@ public class Batch {
     @JsonBackReference
     private Supplier supplier;
 
+    @ManyToOne
+    @JoinColumn(name = "storage_location_id")
+    private StorageLocation storageLocation;
+
 }
