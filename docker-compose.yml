@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: root123
       MYSQL_DATABASE: ecobite_inventory
     ports:
-      - "3307:3306"
+      - "3310:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
