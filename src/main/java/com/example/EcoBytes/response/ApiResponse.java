@@ -1,4 +1,4 @@
-package com.example.EcoBytes.dto;
+package com.example.EcoBytes.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

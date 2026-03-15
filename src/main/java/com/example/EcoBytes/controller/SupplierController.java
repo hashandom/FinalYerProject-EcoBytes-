@@ -1,6 +1,6 @@
 package com.example.EcoBytes.controller;
 
-import com.example.EcoBytes.dto.ApiResponse;
+import com.example.EcoBytes.response.ApiResponse;
 import com.example.EcoBytes.dto.SupplierRequestDto;
 import com.example.EcoBytes.dto.SupplierResponseDto;
 import com.example.EcoBytes.service.SupplierService;

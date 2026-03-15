@@ -1,6 +1,6 @@
 package com.example.EcoBytes.controller;
 
-import com.example.EcoBytes.dto.ApiResponse;
+import com.example.EcoBytes.response.ApiResponse;
 import com.example.EcoBytes.dto.StorageLocationRequestDto;
 import com.example.EcoBytes.dto.StorageLocationResponseDto;
 import com.example.EcoBytes.service.StorageLocationService;

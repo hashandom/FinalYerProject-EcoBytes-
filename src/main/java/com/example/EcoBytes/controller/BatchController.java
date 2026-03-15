@@ -1,6 +1,6 @@
 package com.example.EcoBytes.controller;
 
-import com.example.EcoBytes.dto.ApiResponse;
+import com.example.EcoBytes.response.ApiResponse;
 import com.example.EcoBytes.dto.BatchRequestDto;
 import com.example.EcoBytes.dto.BatchResponseDto;
 import com.example.EcoBytes.service.BatchService;

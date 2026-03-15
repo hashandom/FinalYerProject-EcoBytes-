@@ -1,9 +1,8 @@
 package com.example.EcoBytes.controller;
 
-import com.example.EcoBytes.dto.ApiResponse;
+import com.example.EcoBytes.response.ApiResponse;
 import com.example.EcoBytes.dto.ProductRequestDto;
 import com.example.EcoBytes.dto.ProductResponseDto;
-import com.example.EcoBytes.entity.Product;
 import com.example.EcoBytes.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

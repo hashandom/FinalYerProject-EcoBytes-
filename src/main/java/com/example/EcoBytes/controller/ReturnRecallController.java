@@ -1,6 +1,6 @@
 package com.example.EcoBytes.controller;
 
-import com.example.EcoBytes.dto.ApiResponse;
+import com.example.EcoBytes.response.ApiResponse;
 import com.example.EcoBytes.dto.ReturnRecallRequestDto;
 import com.example.EcoBytes.dto.ReturnRecallResponseDto;
 import com.example.EcoBytes.service.ReturnRecallService;
